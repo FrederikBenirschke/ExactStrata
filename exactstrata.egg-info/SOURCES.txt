@@ -1,0 +1,14 @@
+README.md
+pyproject.toml
+setup.cfg
+exactstrata/Helper.py
+exactstrata/__init__.py
+exactstrata/divtautpolynomial.py
+exactstrata/exactboundarystratum.py
+exactstrata/exactstratum.py
+exactstrata/iteratedblowup.py
+exactstrata/profile.py
+exactstrata.egg-info/PKG-INFO
+exactstrata.egg-info/SOURCES.txt
+exactstrata.egg-info/dependency_links.txt
+exactstrata.egg-info/top_level.txt

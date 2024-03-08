@@ -36,7 +36,7 @@ class DivTautPolynomial(SageObject):
             raise ValueError('DivTautPolynomial needs to work with tuples')
 #             self._div_taut_poly = (div_taut_poly)
         if len(self.div_taut_poly) ==  0 :
-            self._div_taut_poly = (0,)
+            self._div_taut_poly = ( 0 ,)
             
             
     
@@ -143,16 +143,16 @@ class DivTautPolynomial(SageObject):
     
     def divide(self, other, length):
         Z = PowerSeriesRing(SR, 'z', default_prec=length+ 1 , names=('z',)); (z,) = Z._first_ngens(1)
-        inverted = ( 1 / Z(self.div_taut_poly)).list()
+        inverted = ( 1 /Z(self.div_taut_poly)).list()
         return (self * other.invert(length)).trim(length)
         
     
     # Ensure that the polynomial has degree (i.e. codim) at most k
     def trim(self, length):
         # Codimension is greather than length?
-        if length >= 0  and length <= len(self.list()) - 1 :
+        if length >= 0  and length <= len(self.list())- 1 :
             #Then cut off the remainder
-            return DivTautPolynomial(self.list()[ 0 :length + 1 ])
+            return DivTautPolynomial(self.list()[ 0 :length+ 1 ])
         #Otherwise dont need to change anything
         else:
             return self

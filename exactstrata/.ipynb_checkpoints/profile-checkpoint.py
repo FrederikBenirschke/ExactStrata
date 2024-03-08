@@ -9,7 +9,8 @@ from sage.rings.integer_ring import ZZ
 from sage.rings.rational_field import QQ
 from sage.symbolic.ring import SR
 from sage.misc.misc_c import prod
-#from exactstrata.exactboundarystratum import *
+from exactstrata.profile import *
+from exactstrata.exactboundarystratum import *
 from exactstrata.iteratedblowup import *
 from exactstrata.divtautpolynomial import *
 from sage.calculus.var import var
@@ -179,14 +180,14 @@ class Profile(SageObject):
         
         
         
-        chern = DivTautPolynomial([1])
+        chern = DivTautPolynomial([ 1 ])
         
         if not mult:
             for index in self:
-                    chern *= DivTautPolynomial([1, self.exact_stratum.bic_variables[index]])
+                    chern *= DivTautPolynomial([ 1 , self.exact_stratum.bic_variables[index]])
         else:
             for index in self:
-                    chern *= DivTautPolynomial([1, self.X.bics[index].ell*self.exact_stratum.bic_variables[index]])
+                    chern *= DivTautPolynomial([ 1 , self.X.bics[index].ell*self.exact_stratum.bic_variables[index]])
             
             
         
@@ -244,7 +245,7 @@ class Profile(SageObject):
     
     @cached_method
     def ELG_chern(self, level):
-        return self.exact_stratum.to_ELG(self.symbolic_chern(level)[-1])
+        return self.exact_stratum.to_ELG(self.symbolic_chern(level)[- 1 ])
         
 
     
