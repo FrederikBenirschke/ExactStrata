@@ -1,3 +1,15 @@
 [build-system]
 requires = ["setuptools", "wheel"]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "ExactStrata"
+version = "0.0.1"
+requires-python = ">=3.8"
+authors = [
+  {name = "Frederik Benirschke", email = "benirschke.math@gmail.com"}
+]
+
+description = "Package for computing cohomology classes of strata of exact differential"
+
