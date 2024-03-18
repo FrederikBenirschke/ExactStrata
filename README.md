@@ -16,7 +16,7 @@
 
 The basic usage of exact strata is 
 ```sh
- A= ExactStratum(Stratum([-3,1,1,1]),[])
+A= ExactStratum(Stratum([-3,1,1,1]),[])
 divtaut =  A.exact_stratum_class()
 print("Divisorial tautological class: ", divtaut)
 cl= A.pushforward(A.to_ELG(divtaut))
@@ -30,7 +30,7 @@ _For more examples, see the notebook Examples/exactstrata_notebook.ipynb)_
 
 
 
-Requires the package ```admcycles'''.
+Requires the package ```admcycles```.
 
 
 
