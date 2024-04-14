@@ -8,6 +8,7 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+This ```Sage``` package implements the algorithm developed in the paper [`Tautological classes of strata of exact differentials`](https://arxiv.org/abs/2304.04064).
 
 
 <!-- GETTING STARTED -->
@@ -23,15 +24,15 @@ cl= A.pushforward(A.to_ELG(divtaut))
  ```
 
 
-_For more examples, see the notebook Examples/exactstrata_notebook.ipynb)_
+_For more examples, see the notebook Examples/exactstrata_notebook.ipynb._
 
 
 ### Prerequisites
 
 
 
-Requires the package ```admcycles```.
-
+Requires the package ```admcycles```. 
+[`AdmCycles`](https://gitlab.com/modulispaces/admcycles)
 
 
 
