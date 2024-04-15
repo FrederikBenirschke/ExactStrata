@@ -69,9 +69,10 @@ class ExactStratum(SageObject):
  
         
    
-    # The dimension of the ambient GeneralisedStratum
+    
     @property
     def dim(self):
+        ```Returns the dimension of the ambient GeneralisedStratum```
         if self._dim == None:
            
             self._dim = self.X.dim()
