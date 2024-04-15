@@ -72,7 +72,7 @@ class ExactStratum(SageObject):
     
     @property
     def dim(self):
-        ```Returns the dimension of the ambient GeneralisedStratum```
+        '''Returns the dimension of the ambient GeneralisedStratum'''
         if self._dim == None:
            
             self._dim = self.X.dim()
@@ -133,17 +133,17 @@ class ExactStratum(SageObject):
     
     
     def res_torsion_class(self):
-        ```Product of class of the locus of residueless differentials and the class 
+        '''Product of class of the locus of residueless differentials and the class 
         of the locus of  lambda-exact differentials inside the stratum of exact differentials
         as SymbolicExpression
         In general, this class does not have geometric meaning
-        but for g=0 this is the class of the stratum of lambda-exact differentials.```
+        but for g=0 this is the class of the stratum of lambda-exact differentials.'''
         return self.res_class() * self.torsion_class()
     
     
     
     def torsion_ranks_bic(self, bic_index):
-        ```Returns the ranks of a total flag for the local system of relative homology to a two level graphs.```
+        '''Returns the ranks of a total flag for the local system of relative homology to a two level graphs.'''
         torsion_ranks = []
         
         for index in range(len(self.bundle)+1):
@@ -230,7 +230,7 @@ class ExactStratum(SageObject):
     
     @cached_method
     def profile(self, profile_tuple):
-        ``` Creates a profile from a tuple. The entries of the tuple are the indices of the BICs.```
+        ''' Creates a profile from a tuple. The entries of the tuple are the indices of the BICs.'''
         return Profile(self, profile_tuple)
     
     # Returns all profiles (as Profiles) of the underlying GeneralisedStratum, ordered by ascending dimension
@@ -243,8 +243,8 @@ class ExactStratum(SageObject):
     
     @property
     def profile_list(self):
-        ```Returns a list of all profiles (as tuples).
-        It is used for checking that a profile is valid.```
+        '''Returns a list of all profiles (as tuples).
+        It is used for checking that a profile is valid.'''
         return [pf for pf_list in self.X.lookup_list for pf in pf_list]
         
     
@@ -253,7 +253,7 @@ class ExactStratum(SageObject):
    
     @property
     def bics(self):
-        ```  Returns a list of all indices of BICs, respecting the partial order on two-level graphs.```
+        '''  Returns a list of all indices of BICs, respecting the partial order on two-level graphs.'''
         if self._bics == None:
             old_list = list(range(len(self.X.bics.copy())))
             new_list = []
@@ -279,17 +279,17 @@ class ExactStratum(SageObject):
   
             
     def basic_exact_stratum(self, profile, i):
-        ``` # Returns the boundary stratum A_P^{[i]}.
-        Here P is a profile and i(int) denotes the level where the differential is exact.```
+        ''' Returns the boundary stratum A_P^{[i]}.
+        Here P is a profile and i(int) denotes the level where the differential is exact.'''
 #         assert type(i) is sage.rings.integer.Integer, str(i) + " is not an integer but has type "+ str(type(i))
         return self.exact_boundary_stratum(profile, (i,))
     
    
     @cached_method
     def exact_boundary_stratum(self, profile, levels):
-        ``` Creates an ExactBoundaryStratum from a profile (Profile or tuple)
+        ''' Creates an ExactBoundaryStratum from a profile (Profile or tuple)
         and a  list of levels I,  corresponding to subscheme A_P^{[I]} of exact differentials 
-        exact on each level in I.```
+        exact on each level in I.'''
         profile = Profile(self, profile)
         return ExactBoundaryStratum(profile, levels)
     
@@ -299,7 +299,7 @@ class ExactStratum(SageObject):
    
     @cached_method
     def D_lg(self, bic):
-        ``` Returns the ELGTautClass of a BIC (as integer).```
+        ''' Returns the ELGTautClass of a BIC (as integer).'''
         return self.X.additive_generator(((bic,),0))
     
     
