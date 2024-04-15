@@ -131,17 +131,19 @@ class ExactStratum(SageObject):
         return (-1)**(self.torsion_rank) * result
     
     
-    # Product of class of the locus of residueless differentials and the class 
-    # of the locus of  lambda-exact differentials inside the stratum of exact differentials
-    # as SymbolicExpression
-    # In general this class does not have geometric meaning
-    # in g=0 this is the class of the stratum of lambda-exact differentials
+    
     def res_torsion_class(self):
+        ```Product of class of the locus of residueless differentials and the class 
+        of the locus of  lambda-exact differentials inside the stratum of exact differentials
+        as SymbolicExpression
+        In general, this class does not have geometric meaning
+        but for g=0 this is the class of the stratum of lambda-exact differentials.```
         return self.res_class() * self.torsion_class()
     
     
-    # Returns the ranks of a total flag for the local system of relative homology to a two level graphs 
+    
     def torsion_ranks_bic(self, bic_index):
+        ```Returns the ranks of a total flag for the local system of relative homology to a two level graphs.```
         torsion_ranks = []
         
         for index in range(len(self.bundle)+1):
@@ -225,9 +227,10 @@ class ExactStratum(SageObject):
     
     
                 
-    # Creates a profile from a tuple
+    
     @cached_method
     def profile(self, profile_tuple):
+        ``` Creates a profile from a tuple. The entries of the tuple are the indices of the BICs.```
         return Profile(self, profile_tuple)
     
     # Returns all profiles (as Profiles) of the underlying GeneralisedStratum, ordered by ascending dimension
@@ -237,18 +240,20 @@ class ExactStratum(SageObject):
             self._profiles = sorted([Profile(self, pf) for pf in self.profile_list],key=len, reverse=True)
         return self._profiles
     
-    # All list of all profiles (as tuples)
-    # Used for checking that a Profile is valid
+    
     @property
     def profile_list(self):
+        ```Returns a list of all profiles (as tuples).
+        It is used for checking that a profile is valid.```
         return [pf for pf_list in self.X.lookup_list for pf in pf_list]
         
     
     
     
-    #Returns a list of all indices of BICs, respecting the partial order on two-level graphs
+   
     @property
     def bics(self):
+        ```  Returns a list of all indices of BICs, respecting the partial order on two-level graphs.```
         if self._bics == None:
             old_list = list(range(len(self.X.bics.copy())))
             new_list = []
@@ -272,25 +277,29 @@ class ExactStratum(SageObject):
     
 
   
-    # Returns the boundary stratum A_P^{[i]}        
+            
     def basic_exact_stratum(self, profile, i):
+        ``` # Returns the boundary stratum A_P^{[i]}.
+        Here P is a profile and i(int) denotes the level where the differential is exact.```
 #         assert type(i) is sage.rings.integer.Integer, str(i) + " is not an integer but has type "+ str(type(i))
         return self.exact_boundary_stratum(profile, (i,))
     
-    # Creates an ExactBoundaryStratum from a profile (Profile or tuple)
-    # and a level (int), corresponding to subscheme A_P^{[i]} of exact differentials 
-    # exact on the top level
+   
     @cached_method
     def exact_boundary_stratum(self, profile, levels):
+        ``` Creates an ExactBoundaryStratum from a profile (Profile or tuple)
+        and a  list of levels I,  corresponding to subscheme A_P^{[I]} of exact differentials 
+        exact on each level in I.```
         profile = Profile(self, profile)
         return ExactBoundaryStratum(profile, levels)
     
 
             
     
-    # Returns the ELGTautClass of a BIC (as integer).
+   
     @cached_method
     def D_lg(self, bic):
+        ``` Returns the ELGTautClass of a BIC (as integer).```
         return self.X.additive_generator(((bic,),0))
     
     
@@ -348,7 +357,8 @@ class ExactStratum(SageObject):
     # Constructs an iterated blowup. 
     # Given a boundary stratum D_P and a level i
     # this is an iterated blow up along A_{P,Q}^{[i]} where P+Q is a degeneration of P
-    # obtained by splitting the i-th level (except for boundary strata such that A_{P,Q}^{[i]})
+    # obtained by splitting the i-th level.
+    # (Except for boundary strata such that A_{P,Q}^{[i]})
     # is a divisor in D_P)
     # 
     def blowup(self, amb_profile , i):
@@ -372,7 +382,6 @@ class ExactStratum(SageObject):
     
     # Returns the fundamental class of a stratum of lambda-exact differentials.
     # The result is a SymbolicExpression in terms of 'xi' and 'D_{bic}'.
-    # 
     def exact_stratum_class(self, avoiding_blowup=True):
         # We first reduce to the case without relative periods
         if len(self.bundle) > 0:
