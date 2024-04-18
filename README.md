@@ -17,14 +17,25 @@ This ```Sage``` package implements the algorithm developed in the paper [`Tautol
 
 The basic usage of exact strata is 
 ```sh
+
+# Create an ExactStratum for genus one Riemann surfaces
+# and differentials with 3 simple zeros and a pole of order 3
 A= ExactStratum(Stratum([-3,1,1,1]),[])
+
+# Compute the class of the stratum of exact differentials in the Chow ring
+# The formula is a symbolic formula only
 divtaut =  A.exact_stratum_class()
 print("Divisorial tautological class: ", divtaut)
+
+# A.to_ELG(divtaut) converts the symbolic class into an ELGTautClass, a class provided by the package diffstrata
+# to implement tautological classes in strata of multi-scale differentials
+# Finally, A.pushforward(A.to_ELG(divtaut)) takes the ELGTautClass and pushes it forward
+# to the moduli space of curves (where computations are handled by the package admcycles).
 cl= A.pushforward(A.to_ELG(divtaut))
  ```
 
 
-_For more examples, see the notebook Examples/exactstrata_notebook.ipynb._
+_For more examples, see the notebook Examples/exactstrata_notebook.ipynb  [Notebook](Examples/exactstrata_notebook.ipynb)._ 
 
 
 ### Prerequisites
