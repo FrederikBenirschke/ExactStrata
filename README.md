@@ -35,7 +35,7 @@ cl= A.pushforward(A.to_ELG(divtaut))
  ```
 
 
-_For more examples, see the notebook Examples/exactstrata_notebook.ipynb  [Notebook](Examples/exactstrata_notebook.ipynb)._ 
+_For more examples, see the [notebook](Examples/exactstrata_notebook.ipynb) Examples/exactstrata_notebook.ipynb _ 
 
 
 ### Prerequisites
