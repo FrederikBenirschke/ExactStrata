@@ -19,6 +19,8 @@ import exactstrata.profile as expf
 
 
 class ExactBoundaryStratum(SageObject):
+    ''' An ExactBoundary stratum inside a GeneralisedStratum is determined by a boundary stratum (encoded by a profile) and a collection of levels,
+    which are the levels where the differential is exact.'''
     
 
     def __init__(self, profile, levels):
@@ -39,13 +41,8 @@ class ExactBoundaryStratum(SageObject):
         
         # Only need to compute total Chern classes up to the codimension of the stratum of exact differentials
         self.max_codim = self.exact_stratum.exact_rank
-        
-        
-        
-       
-        
+    
         self.ELG = self.X.lookup_graph(self.profile)
-        
         self.ranks = self.exact_stratum.all_ranks(self.ELG)
 
         
@@ -61,10 +58,11 @@ class ExactBoundaryStratum(SageObject):
     
     
     
-    # Intersects two exact boundary strata
-    # The underlying profile is the sume of the profiles
-    # The level set is the union of level sets, adjusted by the level maps of the undegeneration.
+    
     def __add__(self, other):
+        ''' Returns the intersection of  two ExactBoundaryStratum self and other, which is again an ExactBoundaryStratum
+        The underlying profile is the sum of the profiles of self and other.
+        The level set is the union of level sets, adjusted by the level maps of the undegeneration. '''
         new_profile = self.profile + other.profile
         new_levels = []
         self_map = new_profile.level_map(self.profile)
@@ -76,6 +74,7 @@ class ExactBoundaryStratum(SageObject):
                 
         
     def are_disjoint(self, other):
+        ''' Returns true if the intersection of the ExactBoundaryStratum self and other is empty. '''
         try:
             new = self + other
             if  self.exact_stratum.dim - new.codim < _sage_const_0 :
@@ -86,6 +85,7 @@ class ExactBoundaryStratum(SageObject):
 #         return self.profile.are_disjoint(other.profile)
     
     def is_contained(self, other):
+        ''' Returns if the ExactBoundaryStratum self is contained in other. '''
 
         # The profile of self needs to be a degeneration of the profile of other
         if not (other.profile > self.profile or self.profile == other.profile):
@@ -101,10 +101,10 @@ class ExactBoundaryStratum(SageObject):
 
 
 
-    # Computes the codimension of A_P^{I} inside a  boundary stratum D_Q
-    # Default is P = Q
+    
     @property
     def codim(self):
+        ''' Returns the codimension of A_P^{I} inside a  boundary stratum D_Q. The default is P = Q.'''
         return sum(self.ranks[-level] for level in self.levels)
     
     @property
@@ -115,11 +115,12 @@ class ExactBoundaryStratum(SageObject):
     
     
     
-    # Formal expression for the total Chern class for A_P^[I] inside D_Q, where Q is an undegenration of P
-    # By default Q=P
-    # Warning: This works with reduced substacks and does not take care of multiplicities
+  
     @cached_method
     def formal_chern(self):
+        '''  Returns a formal expression for the total Chern class for A_P^[I] inside D_Q, where Q is an undegeneration of P.
+         The default is Q=P.
+        Warning: This works with reduced substacks and does not take care of multiplicities. '''
 #         if ambient_profile == None:
 #             ambient_profile = self.profile
 #         assert ambient_profile > self.profile or ambient_profile == self.profile
@@ -133,9 +134,10 @@ class ExactBoundaryStratum(SageObject):
         
     
     
-    # Decomposes
+   
     @cached_method
     def product_decomposition(self, other):
+         ''' Returns a decomposition of class of a stratum of exact differentials. '''
         assert isinstance(other, ExactBoundaryStratum) and self.is_contained(other)
           
      
@@ -154,12 +156,12 @@ class ExactBoundaryStratum(SageObject):
         
     
     
-    # Computes the total normal bundle of A_P^{[I]} within A_Q^{[J]} 
-    # We use the normalization so that the 
-    # The last coefficient encodes the fundamental class of the reduced space A_P^[I]
-    # To obtain the class of a nonreduced space one needs to multiply with the correct multiplicity
-    # The multiplicity will be determined by the IteratedBlowup and all multiplicities will be computed there
+    
     def formal_normal_bundle(self, other, mult = False):
+        ''' Returns the total normal bundle of A_P^{[I]} within A_Q^{[J]}.
+        We use the normalization where the last coefficient encodes the fundamental class of the reduced space A_P^[I]
+        To obtain the class of a nonreduced space one needs to multiply with the correct multiplicity
+        The multiplicity will be determined by the IteratedBlowup and all multiplicities will be computed there.'''
         intermediate, remainder_profile, remainder_levels = self.product_decomposition(other)
         normal_bundle_A = prod(intermediate.profile.formal_chern(level) for level in remainder_levels)
         normal_bundle_B = remainder_profile.formal_normal_bundle(mult = mult)
