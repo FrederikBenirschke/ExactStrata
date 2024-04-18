@@ -42,8 +42,7 @@ _For more examples, see the  notebook [Examples/exactstrata_notebook.ipynb](Exam
 
 
 
-Requires the package ```admcycles```. 
-[`AdmCycles`](https://gitlab.com/modulispaces/admcycles)
+Requires the package ```admcycles``` (which includes the package ```diffstrata```). It can be found here [`AdmCycles`](https://gitlab.com/modulispaces/admcycles).
 
 
 
