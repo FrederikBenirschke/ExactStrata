@@ -19,11 +19,7 @@ from sage.sets.set import Set
 
 
 class Profile(SageObject):
-    
-    
-    
-    
-
+    ''' A profile is determined by a GeneralisedStratum and a collection of BICs. It encodes the different boundary strata of a stratum of multi-scale differentials.'''
     def __init__(self, exact_stratum, profile):
         self.exact_stratum = exact_stratum
         self.X = self.exact_stratum.X
@@ -78,8 +74,9 @@ class Profile(SageObject):
     
 
         
-     #Sum of profiles   
+       
     def __add__(self, other):
+        ''' Returns the sum of two profiles, corresponding to the profile of the intersection of both boundary strata.'''
         if not isinstance(other, Profile):
             other = Profile(self.exact_stratum, other)
         intersection = self.list()
@@ -130,8 +127,9 @@ class Profile(SageObject):
         return iter(self.profile)
     
     
-    # Returns true if other is a (proper) degeneration of self
+   
     def __gt__(self, other):
+        '''  Returns true if other is a (proper) degeneration of self. '''
         assert isinstance(other, Profile), str(other) + ' is not a profile.'
         for bic_index in self:
             if bic_index not in other:
@@ -139,6 +137,7 @@ class Profile(SageObject):
         return True
     
     def is_empty(self):
+        ''' Returns true if the profile corresponds to the ambient stratum.'''
         return len(self) ==  0 
     
     def is_reduced(self, level):
@@ -194,10 +193,11 @@ class Profile(SageObject):
     
  
     
-#     # Formal total Chern class of the stratum of exact differentials at level i  
-#     # inside the boundary stratum D_P
+
     @cached_method
     def formal_chern(self, level):
+        ''' Formal total Chern class of the stratum of exact differentials at level i  
+        inside the boundary stratum D_P.'''
         
         
         
@@ -217,9 +217,10 @@ class Profile(SageObject):
             divTaut = divTaut.substitute( self.formal_chern(level)[ 1 :],                                         self.symbolic_chern(level)[ 1 :])
         return divTaut
     
-    # Recursively computes the total Chern class as a symbolic expression
+    
     @cached_method
     def symbolic_chern(self, level, avoiding_blowup = True):
+        ''' Recursively computes the total Chern class as a symbolic expression.'''
         blowup = self.exact_stratum.blowup(self, level)
         
         
@@ -266,8 +267,9 @@ class Profile(SageObject):
         return var(profile_str + ''.join('__{}_{}'.format(-level,degree)))
         
  
-    # Determines the level map to an undegeneration of profile
+    
     def level_adjustment(self, undegeneration, level):
+        ''' Determines the level map to an undegeneration of profile.'''
         # No adjustment needed if both profiles are the same
         if self == undegeneration:
             return level
@@ -298,8 +300,9 @@ class Profile(SageObject):
         return level_map
         
    
-    # Returns the profile that (proper) degeneration of self obtained by splitting level i    
+    
     def profile_splits_level(self, degeneration, i):
+        ''' Returns the profile that (proper) degeneration of self obtained by splitting level i.'''
         
         if degeneration == self:
             return True
