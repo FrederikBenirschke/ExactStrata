@@ -19,8 +19,10 @@ from sage.calculus.var import var
 
 
 
-# Dictionary listing the marked points of a generalised stratum     
+
 def marked_to_component(X):
+    '''Dictionary listing the marked points of a generalised stratum. The marked points in the ambient are enumerated by [1...n].
+    The value for a kay is a tuple (i,j) pointing to the j-th marked point on the i-th component.''' 
     return { i+j : (i,j) for i,sig in enumerate(X.sig_list()) for j,_ in enumerate(sig.sig)}
 
 
@@ -29,13 +31,15 @@ def marked_to_component(X):
     
     
 def path_between_markings(ELG, start, end):
+    '''Returns a path between two marked points on the dual graph (implemented via BFS on the dual graph).'''
     G=ELG.LG
     return bfs(G,start,end)
 
-# Breadth-first search to find a path between two vertices
-# Only works if both vertices are in the same connected component of the graph  
+ 
 def bfs(LG, start_leg,goal_leg):
-    visited = [] # List of (vertex,leg) to keep track of visited nodes.
+    '''# Breadth-first search to find a path between two vertices/marked points in the dual graph.
+    Assumes that both vertices are in the same connected component of the graph.'''
+    visited = [] # List with entries (vertex,leg) to keep track of visited nodes.
     path_dict= {}
     queue = []     # Initialize a queue
     visited.append([LG.vertex(start_leg),start_leg, 0 ])
