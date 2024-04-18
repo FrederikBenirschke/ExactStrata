@@ -18,6 +18,9 @@ This ```Sage``` package implements the algorithm developed in the paper [`Tautol
 The basic usage of exact strata is 
 ```sh
 
+from admcycles import * # Provides computations in the tautological ring of the moduli space of curves
+from exactstrata import * 
+
 # Create an ExactStratum for genus one Riemann surfaces
 # and differentials with 3 simple zeros and a pole of order 3
 A= ExactStratum(Stratum([-3,1,1,1]),[])
