@@ -1,0 +1,5 @@
+.DS_Store
+# exactstrata.egg-info/
+# .ipynb_checkpoints/
+**/exactstrata.egg-info/
+**/.ipynb_checkpoints/
