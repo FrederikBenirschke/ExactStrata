@@ -14,11 +14,28 @@ This ```Sage``` package implements the algorithm developed in the paper [`Tautol
 <!-- GETTING STARTED -->
 ## Getting Started
 
+To get started with `ExactStrata`, you need to have the following prerequisites:
 
-The basic usage of exact strata is 
+- `Sage` (version 9.7 or later)
+- `admcycles` package (available at [AdmCycles](https://gitlab.com/modulispaces/admcycles))
+You can install `admcycles` by running the following command in your `Sage` terminal:
+
+```bash 
+sage -pip install git+https://gitlab.com/modulispaces/admcycles
+```
+
+
+To use `ExactStrata`, you can import the necessary modules in your Sage code:
+```sh
+from admcycles import * # Provides computations in the tautological ring of the moduli space of curves
+from exactstrata import *
+```
+
+Here's an example of how to create an `ExactStratum` object and compute the class of the stratum of exact differentials:
+
 ```sh
 
-from admcycles import * # Provides computations in the tautological ring of the moduli space of curves
+from admcycles import * 
 from exactstrata import * 
 
 # Create an ExactStratum for genus one Riemann surfaces
@@ -38,14 +55,7 @@ cl= A.pushforward(A.to_ELG(divtaut))
  ```
 
 
-_For more examples, see the  notebook [Examples/exactstrata_notebook.ipynb](Examples/exactstrata_notebook.ipynb) ._ 
-
-
-### Prerequisites
-
-
-
-Requires the package ```admcycles``` (which includes the package ```diffstrata```). It can be found here [`AdmCycles`](https://gitlab.com/modulispaces/admcycles).
+_For more examples, you can refer to the notebook [Examples/exactstrata_notebook.ipynb](Examples/exactstrata_notebook.ipynb)._ 
 
 
 

@@ -21,6 +21,16 @@ from sage.sets.set import Set
 class Profile(SageObject):
     ''' A profile is determined by a GeneralisedStratum and a collection of BICs. It encodes the different boundary strata of a stratum of multi-scale differentials.'''
     def __init__(self, exact_stratum, profile):
+        """
+        Initializes the Profile object with the given exact_stratum and profile.
+
+        Parameters:
+            exact_stratum: The GeneralisedStratum object.
+            profile: The collection of BICs representing the profile.
+
+        Returns:
+            None
+        """
         self.exact_stratum = exact_stratum
         self.X = self.exact_stratum.X
         if type(profile) == int or type(profile) == sage.rings.integer.Integer:
@@ -47,14 +57,26 @@ class Profile(SageObject):
   
     
     def list(self):
+        """
+        A method that returns a list of the profile attribute.
+        """
         return list(self.profile)
     
     def tuple(self):
+        """
+        Returns the profile attribute as a tuple.
+
+        :return: A tuple representing the profile.
+        :rtype: tuple
+        """
         return self.profile
     
    
     
     def __eq__(self, other):
+        """
+        A description of the entire function, its parameters, and its return types.
+        """
         if other == None:
             return False
         if not isinstance(other, Profile):
@@ -62,21 +84,51 @@ class Profile(SageObject):
         return self.profile == other.profile
     
     def __hash__(self):
+        """
+        A description of the entire function, its parameters, and its return types.
+        """
         return hash(self.profile)
         
        
         
     def __repr__(self):
+        """
+        Returns a string representation of the object.
+
+        :return: A string representation of the object.
+        :rtype: str
+        """
         return str(self.profile)
     
     def __getitem__(self, key):
+        """
+        Get the value at the specified key from the profile.
+
+        Parameters:
+            key (Any): The key to retrieve the value from the profile.
+
+        Returns:
+            Any: The value associated with the specified key.
+        """
         return self.profile[key]
     
 
         
        
     def __add__(self, other):
-        ''' Returns the sum of two profiles, corresponding to the profile of the intersection of both boundary strata.'''
+        """
+        Returns the sum of two profiles, corresponding to the profile of the intersection of both boundary strata.
+
+        Parameters:
+            other (Profile): The other profile to be added. If not an instance of Profile, it will be converted to a Profile using the same exact_stratum.
+
+        Returns:
+            Profile: The profile resulting from the intersection of the two boundary strata.
+
+        Raises:
+            AssertionError: If the resulting profile is not in the list of profiles of the exact_stratum.
+        """
+       
         if not isinstance(other, Profile):
             other = Profile(self.exact_stratum, other)
         intersection = self.list()
@@ -99,9 +151,30 @@ class Profile(SageObject):
         return Profile(self.exact_stratum, intersection)
     
     def __radd__(self,other):
+        """
+        Adds the current object to another object on the right side.
+
+        Parameters:
+            other (Any): The object to add to the current object.
+
+        Returns:
+            Any: The sum of the current object and the other object.
+        """
         return self + other
     
     def __sub__(self, other):
+        """
+        Subtracts the `other` profile from the current profile.
+
+        Parameters:
+            other (Profile): The profile to subtract from the current profile.
+
+        Returns:
+            Profile: The resulting profile after the subtraction.
+
+        Raises:
+            ValueError: If the profiles are not degenerations of each other.
+        """
         if self == other:
             return Profile(self.exact_stratum, ())
         if not isinstance(other, Profile):
@@ -117,13 +190,34 @@ class Profile(SageObject):
         return self - other
                 
     def __contains__(self, item):
+        """
+        Check if the given BIC is present in the `profile` attribute.
+
+        Parameters:
+            item (int): The BIC index to check.
+
+        Returns:
+            bool: True if the BIC index is present in the `profile` attribute, False otherwise.
+        """
         return item in self.profile
     
     
     def __len__(self):
+        """
+        Returns the length of the `profile` attribute.
+
+        :return: An integer representing the length of the `profile` attribute.
+        :rtype: int
+        """
         return len(self.profile)
     
     def __iter__(self):
+        """
+        Returns an iterator object that can be used to iterate over the elements of the `profile` attribute.
+
+        Returns:
+            An iterator object.
+        """
         return iter(self.profile)
     
     
@@ -141,9 +235,28 @@ class Profile(SageObject):
         return len(self) ==  0 
     
     def is_reduced(self, level):
+        """
+        Determines if the profile is reduced.
+
+        Args:
+            level (int): The level to check.
+
+        Returns:
+            bool: True if the profile is reduced, False otherwise.
+        """
         return self.L <=  2  or (self.L == 3  and level == - 1 )
     
     def are_disjoint(self, other):
+        """
+        Determines if two profiles are disjoint.
+
+        Args:
+            self (Profile): The first profile.
+            other (Profile): The second profile.
+
+        Returns:
+            bool: True if the profiles are disjoint, False otherwise.
+        """
         try:
             self + other
         except:
@@ -151,6 +264,15 @@ class Profile(SageObject):
         return False
     
     def is_contained(self, other):
+        """
+        Determines if the profile of self is contained within the profile of other.
+
+        Args:
+            other (Profile): The other profile to compare against.
+
+        Returns:
+            bool: True if the profile of self is contained within the profile of other, False otherwise.
+        """
 
         # The profile of self needs to be a degeneration of the profile of other
         if not (other.profile > self.profile or self.profile == other.profile):
@@ -167,6 +289,15 @@ class Profile(SageObject):
     
     @cached_method
     def codim(self, ambient_profile = None):
+        """
+        Calculate the codimension of the object with respect to the given ambient profile.
+        
+        Parameters:
+            ambient_profile (Profile, optional): The ambient profile to calculate the codimension with. Defaults to None.
+        
+        Returns:
+            int: The codimension of the object.
+        """
         if ambient_profile == None:
             ambient_profile = self.profile
         return self.L - ambient_profile.L
@@ -175,6 +306,15 @@ class Profile(SageObject):
     
     @cached_method
     def formal_normal_bundle(self, mult = False):
+        """
+        Computes and returns the formal normal bundle of the exact stratum profile.
+
+        Args:
+            mult (bool, optional): A flag indicating whether to multiply the normal bundle by the ell value. Defaults to False.
+
+        Returns:
+            DivTautPolynomial: The computed formal normal bundle.
+        """
         
         
         
@@ -213,6 +353,15 @@ class Profile(SageObject):
 
 
     def replace_formal_by_symbolic(self, divTaut):
+        """
+        Replaces the formal Chern classes in the given `divTaut` polynomial with their symbolic equivalents.
+
+        Parameters:
+            divTaut (DivTautPolynomial): The polynomial to replace the formal Chern classes in.
+
+        Returns:
+            DivTautPolynomial: The polynomial with the formal Chern classes replaced by their symbolic equivalents.
+        """
         for level in self.level_set:
             divTaut = divTaut.substitute( self.formal_chern(level)[ 1 :],                                         self.symbolic_chern(level)[ 1 :])
         return divTaut
@@ -245,12 +394,33 @@ class Profile(SageObject):
     
     @cached_method
     def ELG_chern(self, level):
+<<<<<<<<<<<<<  ✨ Codeium AI Suggestion  >>>>>>>>>>>>>>
++        """
++        Returns the Chern class of the Exact Stratum at the given level in the ELG of the moduli space of multi-scale differentials.
++
++        Parameters:
++            level (int): The level at which to compute the Chern class.
++
++        Returns:
++            ELGTautClass: The Chern class of the Exact Stratum at the given level in the ELG.
++        """
+<<<<<  bot-526980c3-5d0c-44da-a59b-45636325765e  >>>>>
         return self.exact_stratum.to_ELG(self.symbolic_chern(level)[-1])
         
 
     
     
     def formal_ck(self, level, degree):
+        """
+        A function that returns the formal Chern class at a given level and degree.
+
+        Parameters:
+            level (int): The level at which to compute the Chern class.
+            degree (int): The degree of the Chern class.
+
+        Returns:
+            The formal Chern class as a symbolic variable.
+        """
         if degree <  0  or degree > self.exact_stratum.exact_rank:
             return  0 
         if degree ==  0 :
@@ -337,16 +507,44 @@ class Profile(SageObject):
     
     
     def splitting_profiles(self, level):
+        """
+        Returns a list of profiles that can be obtained by splitting the current profile at the given level.
+
+        Parameters:
+            level (int): The level at which the profile is to be split.
+
+        Returns:
+            list: A list of profiles that can be obtained by splitting the current profile at the given level.
+        """
         return [profile for profile in self.exact_stratum.profiles if self.profile_splits_level(profile, level) ]
 
     @cached_method
     def splitting_bics(self, level):
+        """
+        Returns a list of boundary intersection cycles (BICs) from the `self.exact_stratum.bics` list
+        that can be split at the given `level`.
+
+        Parameters:
+            level (int): The level at which the BICs are to be split.
+
+        Returns:
+            list: A list of BICs that can be split at the given `level`.
+        """
         bics = self.exact_stratum.bics
         return [bic for bic in  bics if self.bic_splits_level(bic, level)]
     
     
     @cached_method
     def building_set(self, level):
+        """
+        This function calculates the building set and building divisors based on the given level.
+        
+        Parameters:
+            level (int): The level at which the building set is to be calculated.
+        
+        Returns:
+            tuple: A tuple containing two dictionaries - building_set and building_divs.
+        """
         building_set = {}
         building_divs = {}
         for bic_index in self.splitting_bics(level):

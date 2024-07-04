@@ -44,6 +44,26 @@ class ExactStratum(SageObject):
     
     
     def __init__(self, X, bundle):
+        """
+        Initializes an instance of the class with the given arguments.
+
+        Args:
+            X (GeneralisedStratum): The ambient space corresponding to the ExactStratum.
+            bundle (list): A list of relative homology cycles, where each cycle is represented as a list of integers.
+                Each integer corresponds to the marked zeros of the differentials. The entries in each cycle need to add to zero
+                and determine which relative periods are zero.
+
+        Initializes the following instance variables:
+            X (GeneralisedStratum): The ambient space corresponding to the ExactStratum.
+            _dim (None): The dimension of the ExactStratum.
+            bundle (list): The bundle of relative homology cycles.
+            _total_rank (None): The total rank of the ExactStratum.
+            residue_rank (int): The rank of the residue local system.
+            torsion_rank (int): The rank of the relative period local system.
+            _profiles (None): The profiles of the ExactStratum.
+            _bics (None): The boundary intersection cycles of the ExactStratum.
+            _boundary_strata (None): The boundary strata of the ExactStratum.
+        """
         self.X = X
         self._dim = None
         self.bundle = bundle
@@ -66,7 +86,13 @@ class ExactStratum(SageObject):
     
     @property    
     def empty_profile(self):
-        ''' Returns the empty profil (), corresponding to the ambient GeneralisedStratum.'''  
+        """
+        Returns the empty profile of the ExactStratum.
+
+        :return: An instance of the Profile class with an empty profile.
+        :rtype: Profile
+        """
+       
         return Profile(self,())
  
         
@@ -74,19 +100,31 @@ class ExactStratum(SageObject):
     
     @property
     def dim(self):
-        '''Returns the dimension of the ambient GeneralisedStratum.'''
+        """
+        Returns the dimension of the ambient GeneralisedStratum.
+
+        :return: The dimension of the GeneralisedStratum.
+        :rtype: int
+        """
+       
         if self._dim == None:
            
             self._dim = self.X.dim()
         return self._dim
     
     
-    
-    
     @property
     def total_rank(self):
-        ''' The rank of the globally defined vector bundle (with fiber the relative cohomology).
-        Equals the codimension of the stratum of exact differentials within the GeneralisedStratum.'''
+        """
+        Returns the total rank of the ExactStratum.
+
+        The total rank is the sum of the exact rank, residue rank, and torsion rank.
+        The total rank is equal to the codimension of the stratum of exact differentials within the GeneralisedStratum.
+
+        :return: The total rank of the ExactStratum.
+        :rtype: int
+        """
+       
         if self._total_rank == None:
             
             # The rank is the dimension of absolute cohomology of the punctured(!) surface
@@ -98,31 +136,77 @@ class ExactStratum(SageObject):
     
     @property
     def exact_rank(self):
-        ''' The rank of the bundle of absolute cohomology (not including residues).'''
+        """
+        Returns the exact rank of the ExactStratum.
+
+        The exact rank is the sum of twice the number of elements in the list `self.X.g_H`. 
+        This represents the rank of the bundle of absolute cohomology (not including residues).
+
+        :return: The exact rank of the ExactStratum.
+        :rtype: int
+        """
+      
         return 2*sum(self.X.g_H) 
     
     
-    
     def res_bics(self, index):
-        ''' Lists all BICs with the following property:
+        """
+        Returns a list of boundary intersection cycles (BICs) from the `self.bics` list
+        with the following property:    
         The restriction of the residue subspace containing the first i marked poles
-        to the two level graph with index BIC is the same as the restriction containing only the first i-1 marked poles.'''    
+        to the two level graph with index BIC is the same as the restriction containing only the first i-1 marked poles.
+
+        Parameters:
+            index (int): The index of the residue rank to compare.
+
+        Returns:
+            list: A list of BICs that have the same residue rank at the specified index.
+        """
+          
         assert index >=1 and index<= self.residue_rank
         return [bic for bic in self.bics if self.residue_ranks_bic(bic)[index]== self.residue_ranks_bic(bic)[index-1]]
     
     
    
     def torsion_bics(self, index):
-        ''' Lists all BICs with the following property:
-        The restriction of the  subspace of relative periods containing the first i relative periods
-        to the two level graph with index BIC is the same as the restriction containing only the first i relative periods.''' 
-        ''' Has the same functionality as self.res_bics(index), but instead for the bundle of relative periods. '''
+        """
+        Lists all Boundary Intersection Cycles (BICs) that satisfy the property where 
+        the restriction of the subspace of relative periods containing the first `index` relative periods
+        to the two-level graph with index `BIC` is equal to the restriction containing only the first `index` relative periods.
+        
+        This function is equivalent to `self.res_bics(index)`, but specifically for the bundle of relative periods.
+
+        Parameters:
+            index (int): The index of the relative period to compare.
+
+        Returns:
+            list: A list of BICs that meet the specified property.
+        """
         assert index >=1 and index<= self.torsion_rank
         return [bic for bic in self.bics if self.torsion_ranks_bic(bic)[index]== self.torsion_ranks_bic(bic)[index-1]]
         
    
     def res_class(self):
-         '''The class of the locus of residueless differentials as SymbolicExpression.'''
+        """
+        Calculates the class of the locus of residueless differentials.
+
+        Returns:
+            int or SymbolicExpression: The class of the locus of residueless differentials.
+                Returns 0 if the class is zero.
+                Returns a SymbolicExpression representing the class otherwise.
+
+        Description:
+            This function calculates the class of the locus of residueless differentials.
+            It iterates over the residue indices and calculates the class for each index.
+            The class is represented as a product of the variable 'xi' and the sum of the product
+            of the 'ell' attribute of the BICs and the corresponding bic_variable.
+
+            If the class is zero, the function returns 0.
+            Otherwise, it returns the negative of the class multiplied by the residue rank.
+
+      
+        """
+        
         result = 1
         for index in range(1, self.residue_rank+1):
             result *= var('xi')+sum(self.X.bics[bic].ell * self.bic_variables[bic] for bic in self.res_bics(index))
@@ -133,8 +217,20 @@ class ExactStratum(SageObject):
     
     
     def torsion_class(self):
-        ''' The class of the locus of  lambda-exact differentials inside the stratum of exact differentials
-        as SymbolicExpression.'''
+        """
+        Calculates the class of the locus of lambda-exact differentials inside the stratum of exact differentials
+        as a SymbolicExpression.
+
+        Returns:
+            SymbolicExpression: The class of the locus of lambda-exact differentials.
+
+        Description:
+            This function calculates the class of the locus of lambda-exact differentials by iterating over the torsion rank.
+            For each index, it multiplies the variable 'xi' by the sum of the product of the 'ell' attribute of the BICs
+            and the corresponding bic_variables. The result is then multiplied by (-1) raised to the power of the torsion rank.
+
+        """
+      
         result = 1
         for index in range(1,self.torsion_rank+1):
             result *= var('xi')+sum(self.X.bics[bic].ell * self.bic_variables[bic] for bic in self.torsion_bics(index))
@@ -168,7 +264,16 @@ class ExactStratum(SageObject):
     
     
     def residue_ranks_bic(self, bic_index):
-        ''' Returns the ranks of a total flag for the local system of residues on a two level graph.'''
+        """
+        Calculates the ranks of a total flag for the local system of residues on a two-level graph.
+
+        Parameters:
+            bic_index (int): The index of the BIC in the list of BICs.
+
+        Returns:
+            list: A list of integers representing the ranks of the total flag.
+        """
+       
         
         X = self.X
         all_poles = X._polelist
@@ -243,7 +348,13 @@ class ExactStratum(SageObject):
     
     @property
     def profiles(self):
-        ''' Returns all profiles (as Profiles) of the underlying GeneralisedStratum, ordered by ascending dimension.'''
+        """
+        Returns a sorted list of all the profiles of the underlying GeneralisedStratum, ordered by ascending dimension.
+
+        Returns:
+            list: A list of Profile objects, sorted by the length of the profile in descending order.
+        """
+      
         if self._profiles == None:
             self._profiles = sorted([Profile(self, pf) for pf in self.profile_list],key=len, reverse=True)
         return self._profiles
@@ -251,8 +362,17 @@ class ExactStratum(SageObject):
     
     @property
     def profile_list(self):
-        '''Returns a list of all profiles (as tuples).
-        It is used for checking that a profile is valid.'''
+        """
+        Returns a list of all profiles (as tuples) of the underlying GeneralisedStratum.
+        
+        This property generates a list of all profiles by iterating over the lookup_list of the GeneralisedStratum X.
+        Each element in the lookup_list is a list of tuples, where each tuple represents a profile.
+        The method then flattens the list of tuples into a single list and returns it.
+        
+        Returns:
+            list: A list of all profiles (as tuples) of the underlying GeneralisedStratum.
+        """
+       
         return [pf for pf_list in self.X.lookup_list for pf in pf_list]
         
     
@@ -261,7 +381,15 @@ class ExactStratum(SageObject):
    
     @property
     def bics(self):
-        ''' Returns a list of all indices of BICs, respecting the partial order on two-level graphs.'''
+        """
+        Returns a list of all indices of BICs, respecting the partial order on two-level graphs.
+        
+        This property generates a list of all indices of BICs by reordering the list of indices based on the partial order on two-level graphs. The partial order is determined by the `lies_over` method of the `X` object.
+        
+        Returns:
+            list: A list of all indices of BICs, respecting the partial order on two-level graphs.
+        """
+        
         if self._bics == None:
             old_list = list(range(len(self.X.bics.copy())))
             new_list = []
@@ -322,7 +450,7 @@ class ExactStratum(SageObject):
     
     @cached_method    
     def formal_xi_at_level(self, profile, level):
-        '''  Returns the xi- class at a given level of a boundary stratum D_P as a SymbolicExpression.
+        '''  Returns the xi - class at a given level of a boundary stratum D_P as a SymbolicExpression.
         The result is a sum of 'xi' and 'D_{bic}' for different BICs.'''
         assert level in profile.level_set, show(level, profile.level_set)
         if len(profile) == 0 or  level==0:
@@ -354,9 +482,21 @@ class ExactStratum(SageObject):
     
     @property 
     def bic_variables(self):
+        """
+        Returns a dictionary that maps the values of `bic_variables_inv` to their corresponding keys.
+
+        Returns:
+            dict: A dictionary mapping the values of `bic_variables_inv` to their corresponding keys.
+        """
         return {value: key for key, value in self.bic_variables_inv.items()}
  
     def __repr__(self):
+        """
+        Returns a string representation of the object.
+
+        Returns:
+            str: A string representation of the object.
+        """
         return str([[sig.sig for sig in self.X._sig_list_H], self.bundle])  
     
     
@@ -368,12 +508,24 @@ class ExactStratum(SageObject):
     
     
     def blowup(self, amb_profile , i):
-        '''Constructs an iterated blowup. 
-        Given a boundary stratum D_P and a level i
-        this is an iterated blow up along all subvarieties A_{P,Q}^{[i]}, where P+Q is a degeneration of P
-        obtained by splitting the i-th level.
-        (Ignores boundary strata such that A_{P,Q}^{[i]})
-        is a divisor in D_P since here the blow-up does not do anything).''' 
+        """ 
+        Constructs an iterated blowup.
+        
+        Args:
+            D_P (object): The boundary stratum.
+            i (int): The level to split.
+        
+        Returns:
+            IteratedBlowup: The iterated blowup object.
+        
+        Description:
+            Given a boundary stratum D_P and a level i, 
+            this function constructs an iterated blow up along all subvarieties A_{P,Q}^{[i]},
+            where P+Q is a degeneration of P obtained by splitting the i-th level.
+            (Ignores boundary strata such that A_{P,Q}^{[i]} is a divisor in D_P since here the blow-up does not do anything).
+        
+        is a divisor in D_P since here the blow-up does not do anything).
+        """
 
         amb_profile = self.profile(amb_profile)
 
@@ -396,8 +548,20 @@ class ExactStratum(SageObject):
     
     
     def exact_stratum_class(self, avoiding_blowup=True):
-        '''  Returns the fundamental class of a stratum of lambda-exact differentials (as SymbolicExpression).
-        The result is a SymbolicExpression in terms of 'xi' and 'D_{bic}'. '''
+        '''
+        Returns the fundamental class of a stratum of lambda-exact differentials.
+
+        Args:
+            avoiding_blowup (bool, optional): Flag to indicate if avoiding blowup is enabled. Defaults to True.
+
+        Returns:
+            SymbolicExpression: The fundamental class of the stratum as a SymbolicExpression in terms of 'xi' and 'D_{bic}'.
+
+        Description:
+            The function returns the fundamental class of a stratum of lambda-exact differentials as a SymbolicExpression in terms of 'xi' and 'D_{bic}'.
+            First it reduces to the case without relative periods.
+            Then, it computes the class corresponding to the remaining absolute periods and returns the result.
+        '''
         # We first reduce to the case without relative periods
         if len(self.bundle) > 0:
             new_exact_stratum = ExactStratum(self.X, [])
@@ -417,10 +581,21 @@ class ExactStratum(SageObject):
     
     
     def symbolic_class(self, profile, level, avoiding_blowup = True):
-        ''' Returns the fundamental class of A_P^{[i]} inside D_P.
+        """
+        Returns the fundamental class of A_P^{[i]} inside D_P.
         The result is computed inside the stratum of residueless differentials.
         If one wants the class inside the GenerlisedStratum, this needs to be multiplied by
-        self.res_class().'''
+        self.res_class().
+
+        Args:
+            profile (Profile): The profile of the class.
+            level (int): The level of the class.
+            avoiding_blowup (bool, optional): Whether to avoid blowup in the computation. Defaults to True.
+
+        Returns:
+            SymbolicClass: The fundamental class of A_P^{[i]} inside D_P.
+
+        """
         profile = Profile(self, profile)
         
         # The class of the exact stratum is the last coefficient in the Chern polynomial
@@ -430,8 +605,22 @@ class ExactStratum(SageObject):
 
     
     def to_ELG(self, symbolic_class):
-        ''' Converts a SymbolicExpression to an ELGTautClass.
-        Requires the symbolic expression to be a polynomial in 'xi' and 'D_{bic}'.'''
+        """
+        Converts a SymbolicExpression to an ELGTautClass.
+
+        Args:
+            symbolic_class (sage.symbolic.expression.Expression or int): The symbolic expression to convert.
+
+        Returns:
+            ELGTautClass: The converted ELGTautClass.
+
+        Raises:
+            ValueError: If the input is not a symbolic expression or an integer.
+
+        Note:
+            The symbolic expression should be a polynomial in 'xi' and 'D_{bic}'.
+
+        """
         X = self.X
         
         result =  0
@@ -463,8 +652,15 @@ class ExactStratum(SageObject):
     
     .
     def pushforward(self, fund_class):
-        ''' Returns the pushforward of a ELGTautClass on the underlying GeneralisedStratum
-        to a TautClass on Mgnbar.'''
+              """
+              Pushes forward a  class to a product taut class and returns the resulting taut class.
+      
+              Args:
+                  fund_class (DivTautClass): A  DivTautClass.
+      
+              Returns:
+                  TautClass: A taut class.
+              """
         return fund_class.to_prodtautclass().pushforward()
 
     
@@ -474,10 +670,16 @@ class ExactStratum(SageObject):
     #--------------------------------------------------------------------------
     
   
-        
-    # The bundle records the relative equations and  is given by a list of vectors. 
-    # Returns a basis for the space of relative cycles.
     def bundle_basis(self):
+        """
+        Compute the basis for the space of relative cycles.
+
+        Returns:
+            list: A list of vectors representing the basis for the space of relative cycles.
+
+        Raises:
+            ValueError: If the bundle contains a non-zero vector, indicating an invalid relative homology class.
+        """
         
         num_marked_points =  sum([len(sig.sig) for sig in self.X._sig_list_H]) # Number of marked points
 
@@ -489,10 +691,20 @@ class ExactStratum(SageObject):
 
   
     
-    # Restricts the ExactBoundaryStratum to the top level of a BIC.
-    # The result is a new ExactBoundaryStratum supported on the underlying GenerlisedStratum of the top level
-    # and computes the images of absolute and relative cycles under the specialization morphism.
     def bundle_to_top(self, BIC):
+        """
+        Compute the top level homology of an EmbeddedLevelGraph (ELG) and return an ExactStratum object supported on the
+        underlying GenerlisedStratum of the top level.
+
+        Parameters:
+            BIC (EmbeddedLevelGraph): The EmbeddedLevelGraph representing a BIC.
+
+        Returns:
+            ExactStratum: An ExactStratum object representing the top level homology of the BIC.
+
+        Raises:
+            ValueError: If the input BIC is not a valid BIC.
+        """
         
         if not BIC.is_bic():
             raise ValueError("Level graph is not a BIC")
@@ -503,14 +715,19 @@ class ExactStratum(SageObject):
         return ExactStratum(BIC.top,list(basis))
     
         
-    # Helper function to organize the data associated to the top level of a bic.
-    # Input:
-    # 'ELG' - an EmbeddedLevelGraph, should only be used for BICs
-    # Output:
-    # 'marked_topl' - list of integers, the entries correspond to the marked points  on the top level of the BIC
-    # 'num_marked_topl' - integer, the number of marked points on top level
-    # 'topl_dict' - dictionary (marked point on top level of BIC: index_marked point ) enumerating the marked points
     def top_level_homology(self, ELG):
+        """
+        Compute the top level homology of an EmbeddedLevelGraph (ELG).
+
+        Parameters:
+            ELG (EmbeddedLevelGraph): The input EmbeddedLevelGraph.
+
+        Returns:
+            marked_topl (list): A list of integers representing the marked points on the top level of the BIC.
+            num_marked_topl (int): The number of marked points on the top level.
+            rel_module (FreeModule): A free module with coefficients in QQ and basis of size num_marked_topl.
+            topl_dict (dict): A dictionary mapping marked points on the top level to their indices.
+        """
         marked_topl = [l for i,_ in enumerate(ELG.LG.genera)\
                        if ELG.LG.levelofvertex(i)==0 for l in ELG.LG.legsatvertex(i) ]
         num_marked_topl = len(marked_topl)
@@ -520,27 +737,21 @@ class ExactStratum(SageObject):
     
     
     
-    # # For a BIC finds all relative cycles in the image of the absolute homology under the specialization map 
-    # # to the top level
-    # def absolute_bundle_basis(self, ELG):
-        
-    #     basis= ELG.LG.stgraph.cycle_basis()
-    #     marked_topl , num_marked_topl, _,topl_dict = self.top_level_homology(ELG)
-        
-    #     cycle_basis =[]
-    #     for path in basis:
-    #         vec = [0] * num_marked_topl
-    #         for i,e in  enumerate(path):
-    #             leg = sort_edge(ELG,ELG.LG.edges[i])[0]
-    #             vec[topl_dict[leg]]= e
-    #         cycle_basis.append(vec)
-    #     return cycle_basis
-
-
-
-    # For a BIC finds all relative cycles in the image of the absolute homology under the specialization map 
-    # to the top level
+    
     def absolute_bundle_basis(self, ELG):
+        """
+        Computes the absolute bundle basis for a given ELG.
+
+        Args:
+            ELG (ExactLG): The ExactLG object representing the ELG.
+
+        Returns:
+            list: A list of vectors representing the absolute bundle basis. 
+            Each vector corresponds to a cycle in the cycle basis of the stgraph of ELG. 
+            Each element in the vector corresponds to the value of the cycle at a marked top level vertex. 
+            The value is determined by the leg of the corresponding edge in ELG.
+
+        """
         
         basis= ELG.LG.stgraph.cycle_basis()
         marked_topl , num_marked_topl, _,topl_dict = self.top_level_homology(ELG)
@@ -558,6 +769,20 @@ class ExactStratum(SageObject):
     # Computes a basis for the image of the relative cycles (here we mean purely relative)
     # under the specialization morphism to the top level.
     def relative_bundle_basis(self, ELG):
+        """
+        Computes a basis for the image of the relative cycles (here we mean purely relative)
+        under the specialization morphism to the top level.
+
+        Parameters:
+            ELG (ExactStratum): The exact stratum to compute the relative bundle basis for.
+
+        Returns:
+            list: A list of vectors representing the basis for the image of the relative cycles.
+
+        Raises:
+            ValueError: If ELG is not a BIC (Branched Ideal Complex).
+
+        """
         
 
         #only works for BICs:
@@ -597,11 +822,24 @@ class ExactStratum(SageObject):
 
     
 
-    # Given an EmbeddedLevelGraph computes the exact rank of the restriction of the bundle of relative homology
-    # Note that this does not take into account residues or relative cycles
-    # but only absolute homology hmology cycles
     
     def all_ranks(self, ELG):
+        """
+        Calculates the ranks of the restriction of the bundle of relative homology to each level of the EmbeddedLevelGraph.
+        
+        Args:
+            ELG (EmbeddedLevelGraph or tuple/list): The EmbeddedLevelGraph or the profile of the EmbeddedLevelGraph.
+        
+        Returns:
+            list: A list of integers representing the ranks of the restriction of the bundle of relative homology to each level.
+        
+        Raises:
+            ValueError: If the input ELG is defined for the wrong stratum.
+        
+        Note:
+            If the input ELG is a profile instead of an EmbeddedLevelGraph, we can use any graph with this profile.
+            The result is independent of the choice and such a graph can be obtained using self.X.lookup_graph(profile).
+        """
         
 
         # If the input ELG is a profile instead of an EmbeddeedLevelGraph,
