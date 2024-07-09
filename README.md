@@ -35,12 +35,13 @@ On the  other hand, exact differentials are closely related to meromorphic funct
 To get started with `ExactStrata`, you need to have the following prerequisites:
 
 - `Sage` (version 9.7 or later)
-- `admcycles` package (available at [AdmCycles](https://gitlab.com/modulispaces/admcycles))
-You can install `admcycles` by running the following command in your `Sage` terminal:
+- `admcycles` package (available at [AdmCycles](https://gitlab.com/modulispaces/admcycles)) You can install `admcycles` by running the following command in your `Sage` terminal:
 
-```bash 
-sage -pip install git+https://gitlab.com/modulispaces/admcycles
-```
+    ```bash 
+    sage -pip install git+https://gitlab.com/modulispaces/admcycles
+    ```
+
+To install `ExactStrata follows these steps:
 
 1. Clone the repository.
 
@@ -92,7 +93,7 @@ Here's an example of how to create an `ExactStratum` object and compute the clas
    ```
 
 
-_For more examples, you can refer to the notebook [Examples/exactstrata_notebook.ipynb](Examples/exactstrata_notebook.ipynb)._ 
+_For more examples, you can refer to the [Examples notebook](Examples/exactstrata_notebook.ipynb)._ 
 
 
 
