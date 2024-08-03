@@ -16,6 +16,7 @@ On the  other hand, exact differentials are closely related to meromorphic funct
 ## Table of contents
 - [Features](#features)
 - [Installation](#installation)
+- [Outline of the algorithm](#outline-of-the-algorithm)
 - [Getting Started](#getting-started)
 - [License](#license)
 - [Contact](#contact)
@@ -58,6 +59,24 @@ To install `ExactStrata follows these steps:
     ```bash
     sage -pip install .
     ```
+
+## Outline of the algorithm
+The general algorithm presented in the paper is intricate and highly technical, so we will provide a simplified overview of the main idea.
+
+Let $\mathcal{H}(\mu)$ be a stratum of meromorphic differentials and let $\text{Exc}$ be the locus of exact differentials in $\mathcal{H}(\mu)$. Our focus is on the multi-scale compactification $\overline{\mathcal{H}}(\mu)$ , with the objective of determining the class of $\text{Exc}$ in the cohomology ring (Chow ring) of $\overline{\mathcal{H}}(\mu)$.
+
+Exact differentials are described by the vanishing of all periods, which allows us to represent $\text{Exc}$ as the zero locus of a section of a vector bundle $E$ on $\mathcal{H}(\mu)$.
+The class of $\text{Exc}$ in $\mathcal{H}(\mu)$ can be computed in terms of the Chern classes of $E$, which are all tautological classes.
+
+The goal is to extend the computation to $\overline{\mathcal{H}}(\mu)$. Both the vector bundle $E$ and the section vanishing on $\text{Exc}$ can be extended to $\overline{\mathcal{H}}(\mu)$.
+The extended section vanishes on $\overline{\text{Exc}}\subseteq \overline{\mathcal{H}}(\mu)$, but it vanishes on additional components supported on the boundary. Our approach involves the following steps:
+1. **Identify Additional Components**: These components are related to exact differentials supported on boundary components, and their classes can be computed inductively.
+2.  **Subtract Additional Contributions:**  After identifying the additional components, we subtract their contributions. The remaining class corresponds to the class of $\overline{\text{Exc}}$.
+
+This straightforward approach works directly when an additional component is a divisor. The main technical challenge arises from the presence of many components of higher codimension. To handle these higher codimension components, we convert them into divisors through a series of blow-ups. This process must be done carefully and in the correct order, as the components can intersect each other. After all blow-ups have been performed we can compute the class of   $\overline{\text{Exc}}$ using a simple Chern class computation. Finally, we have to pushforward the class from the blow-up down to $\overline{\mathcal{H}}(\mu)$. At this stage, we need to know the classes (and all the Chern classes of the normal bundles) of all additional components, which can be determined recursively.
+
+
+
 
 ## Getting started
 
